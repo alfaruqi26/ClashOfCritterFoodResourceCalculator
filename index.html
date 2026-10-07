@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Level Tatari - Clash of Critters</title>
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --accent-color: #0f3460;
+            --primary-color: #e94560;
+            --text-color: #ffffff;
+            --text-secondary: #b2b2b2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--accent-color);
+            background-color: #0f3460;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-calc:hover {
+            opacity: 0.9;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: var(--accent-color);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4eef91;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Tatari</h1>
+    <p class="subtitle">Hitung estimasi hari untuk menaikkan level Tatari (Clash of Critters)</p>
+
+    <!-- STATUS SAAT INI & TARGET -->
+    <div class="section-title">1. Status Level Tatari</div>
+    <div class="grid-inputs">
+        <div class="input-group">
+            <label for="currentLevel">Level Sekarang:</label>
+            <input type="number" id="currentLevel" value="1" min="1">
+        </div>
+        <div class="input-group">
+            <label for="currentPoints">Poin Saat Ini (Level skrg):</label>
+            <input type="number" id="currentPoints" value="0" min="0">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label for="targetLevel">Target Level:</label>
+        <input type="number" id="targetLevel" value="5" min="2">
+    </div>
+
+    <!-- INVENTORY MAKANAN -->
+    <div class="section-title">2. Stok Makanan yang Dimiliki</div>
+    <div class="food-grid">
+        <div class="input-group">
+            <label>Makanan (+1 Poin)</label>
+            <input type="number" class="food-input" data-val="1" value="0" min="0">
+        </div>
+        <div class="input-group">
+            <label>Makanan (+5 Poin)</label>
+            <input type="number" class="food-input" data-val="5" value="0" min="0">
+        </div>
+        <div class="input-group">
+            <label>Makanan (+10 Poin)</label>
+            <input type="number" class="food-input" data-val="10" value="0" min="0">
+        </div>
+        <div class="input-group">
+            <label>Makanan (+15 Poin)</label>
+            <input type="number" class="food-input" data-val="15" value="0" min="0">
+        </div>
+        <div class="input-group">
+            <label>Makanan (+30 Poin)</label>
+            <input type="number" class="food-input" data-val="30" value="0" min="0">
+        </div>
+    </div>
+
+    <button class="btn-calc" onclick="calculateDays()">Hitung Estimasi Hari</button>
+
+    <!-- HASIL -->
+    <div class="result-box" id="resultBox">
+        <div class="result-title" id="resDays">Dibutuhkan: - Hari</div>
+        <div class="result-item" id="resTotalNeeded">Total Poin Dibutuhkan: -</div>
+        <div class="result-item" id="resInvPoints">Total Poin dari Makanan yang Dimiliki: -</div>
+        <div class="result-item" id="resRemaining">Sisa Poin yang Masih Kurang: -</div>
+        <div class="result-item" id="resTotalFeeds">Total Memberi Makan (Feed): - kali</div>
+    </div>
+</div>
+
+<script>
+    // TARGET POIN SETIAP LEVEL (Bisa kamu sesuaikan nilainya dengan data dalam game)
+    // Contoh: Level 1 -> 100, Level 2 -> 180, Level 3 -> 240, dst.
+    const levelRequirements = {
+        1: 100,
+        2: 180,
+        3: 240,
+        4: 340,
+        5: 440,
+        6: 550,
+        7: 680,
+        8: 820,
+        9: 1000,
+        10: 1200
+        // Kamu bisa menambah level selanjutnya di sini (misal: 11: 1500, dst)
+    };
+
+    const DAILY_FEED_LIMIT = 15; // Jatah max makan per hari
+
+    function calculateDays() {
+        const curLvl = parseInt(document.getElementById('currentLevel').value) || 1;
+        const curPts = parseInt(document.getElementById('currentPoints').value) || 0;
+        const targetLvl = parseInt(document.getElementById('targetLevel').value) || 1;
+
+        if (targetLvl <= curLvl) {
+            alert('Target level harus lebih tinggi dari level saat ini!');
+            return;
+        }
+
+        // 1. Hitung total poin yang dibutuhkan dari curLvl ke targetLvl
+        let totalPointsNeeded = 0;
+        for (let lvl = curLvl; lvl < targetLvl; lvl++) {
+            totalPointsNeeded += (levelRequirements[lvl] || 500); // Default 500 jika level belum terdaftar
+        }
+
+        // Kurangi dengan poin yang sudah dikumpulkan di level saat ini
+        totalPointsNeeded -= curPts;
+        if (totalPointsNeeded < 0) totalPointsNeeded = 0;
+
+        // 2. Hitung total poin dari stok makanan saat ini
+        let inventoryPoints = 0;
+        let totalFoodCount = 0;
+        const foodInputs = document.querySelectorAll('.food-input');
+
+        foodInputs.forEach(input => {
+            const count = parseInt(input.value) || 0;
+            const value = parseInt(input.getAttribute('data-val'));
+            inventoryPoints += count * value;
+            totalFoodCount += count;
+        });
+
+        // 3. Logika Perhitungan Hari
+        // Karena batas per hari 15 kali makan:
+        let totalFeedsNeeded = 0;
+        
+        // Jika poin makanan di inventory sudah cukup/lebih dari cukup
+        // Kita butuh tahu berapa kali beri makan minimum yang dipakai
+        // Namun sederhananya, setiap kali makan = 1 batas harian
+        let daysNeeded = 0;
+
+        if (inventoryPoints >= totalPointsNeeded) {
+            // Jika stok cukup, hitung berapa hari menghabiskan makanan tersebut (karena max 15x/hari)
+            // Asumsi memakai makanan paling efektif dulu atau estimasi jumlah feed
+            // Sederhananya: berapa kali feed sampai poin tercapai
+            // *Catatan: Untuk estimasi paling realistis, jumlah hari = ceil(totalFeeds / 15)
+            // Jika makanan di tas cukup, hari bergantung berapa kali click feed.
+            // Asumsi rata-rata 1 kali feed menyelesaikan kebutuhan:
+            let neededPts = totalPointsNeeded;
+            let feeds = 0;
+
+            // Sort makanan dari yang paling besar ke kecil (+30 ke +1)
+            let foods = [];
+            foodInputs.forEach(input => {
+                foods.push({
+                    val: parseInt(input.getAttribute('data-val')),
+                    count: parseInt(input.value) || 0
+                });
+            });
+            foods.sort((a, b) => b.val - a.val);
+
+            for (let f of foods) {
+                while (f.count > 0 && neededPts > 0) {
+                    neededPts -= f.val;
+                    f.count--;
+                    feeds++;
+                }
+            }
+
+            totalFeedsNeeded = feeds;
+            daysNeeded = Math.ceil(totalFeedsNeeded / DAILY_FEED_LIMIT);
+        } else {
+            // Jika stok makanan KURANG:
+            // Sisa poin yang butuh dicari dari harian
+            let remainingPointsNeeded = totalPointsNeeded - inventoryPoints;
+
+            // Berapa feed yang terpakai dari inventory
+            totalFeedsNeeded = totalFoodCount;
+
+            // Untuk sisa poin, jika tidak ada makanan, kita hitung berapa feed lagi (asumsi per feed misal rata-rata 5-10 point atau sesuai ketersediaan harian)
+            // Atau jika harian dianggap butuh berapa hari:
+            // Diasumsikan sisa feed dilakukan dengan rata-rata makanan misal +5 atau +10 poin
+            let estimatedExtraFeeds = Math.ceil(remainingPointsNeeded / 5); // misal rerata +5 poin per feed harian
+            
+            let grandTotalFeeds = totalFeedsNeeded + estimatedExtraFeeds;
+            daysNeeded = Math.ceil(grandTotalFeeds / DAILY_FEED_LIMIT);
+        }
+
+        // Tampilkan Hasil
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('resDays').innerText = `Dibutuhkan: ${daysNeeded} Hari`;
+        document.getElementById('resTotalNeeded').innerText = `Total Poin Dibutuhkan: ${totalPointsNeeded + curPts} Poin (Sisa: ${totalPointsNeeded} Poin lagi)`;
+        document.getElementById('resInvPoints').innerText = `Total Poin dari Makanan Saat Ini: ${inventoryPoints} Poin`;
+        
+        let remainingStr = inventoryPoints >= totalPointsNeeded ? "Sudah Cukup!" : `${totalPointsNeeded - inventoryPoints} Poin lagi`;
+        document.getElementById('resRemaining').innerText = `Sisa Poin yang Masih Kurang: ${remainingStr}`;
+        document.getElementById('resTotalFeeds').innerText = `Estimasi Total Beri Makan: ${totalFeedsNeeded} kali`;
+    }
+</script>
+
+</body>
+</html>
