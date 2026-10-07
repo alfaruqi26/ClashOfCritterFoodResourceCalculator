@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Level Tatari - Clash of Critters</title>
+    
+    <!-- FAVICON (Ikon Tab Browser) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+
     <style>
         :root {
             --bg-color: #0f172a;
@@ -77,7 +81,7 @@
             color: #f1f5f9;
         }
 
-        /* PERBAIKAN STYLES TOOLTIP (MUNCUL KE BAWAH/SAMPING) */
+        /* STYLES TOOLTIP (MUNCUL KE BAWAH) */
         .tooltip-container {
             position: relative;
             display: inline-flex;
@@ -107,8 +111,8 @@
             padding: 12px;
             position: absolute;
             z-index: 50;
-            top: 130%; /* Diubah agar muncul ke bawah */
-            left: 0;   /* Posisi sejajar dari kiri ikon */
+            top: 130%;
+            left: 0;
             opacity: 0;
             transition: opacity 0.3s;
             box-shadow: 0 8px 20px rgba(0,0,0,0.8);
@@ -117,7 +121,6 @@
             line-height: 1.5;
         }
 
-        /* Panah indikator menyangga ke atas */
         .tooltip-text::after {
             content: "";
             position: absolute;
@@ -314,12 +317,12 @@
     <div class="grid-inputs">
         <div class="input-group">
             <label for="currentPoints">Poin Saat Ini:</label>
-            <span class="desc">Angka depan (Contoh: <b>205</b>/440)</span>
-            <input type="number" id="currentPoints" value="205" min="0">
+            <span class="desc">Angka depan (Contoh: <b>0</b>/440)</span>
+            <input type="number" id="currentPoints" value="0" min="0">
         </div>
         <div class="input-group">
             <label for="maxPoints">Max Poin Bar Saat Ini:</label>
-            <span class="desc">Angka penyebut (Contoh: 205/<b>440</b>)</span>
+            <span class="desc">Angka penyebut (Contoh: 0/<b>440</b>)</span>
             <input type="number" id="maxPoints" value="440" min="100" placeholder="misal: 440">
         </div>
     </div>
@@ -332,8 +335,8 @@
             <option value="3">Lulus Level 3 (Selesai Max 260)</option>
             <option value="4">Lulus Level 4 (Selesai Max 340)</option>
             <option value="5">Lulus Level 5 (Selesai Max 440)</option>
-            <option value="6" selected>Lulus Level 6 (Selesai Max 540)</option>
-            <option value="7">Lulus Level 7 (Selesai Max 640)</option>
+            <option value="6">Lulus Level 6 (Selesai Max 540)</option>
+            <option value="7" selected>Lulus Level 7 (Selesai Max 640)</option>
             <option value="8">Lulus Level 8 (Selesai Max 740)</option>
             <option value="9">Lulus Level 9 (Selesai Max 840)</option>
         </select>
@@ -362,7 +365,7 @@
                     <span class="desc">Pudding, Pop, Soda</span>
                 </div>
             </div>
-            <input type="number" class="food-input" data-val="5" value="119" min="0">
+            <input type="number" class="food-input" data-val="5" value="0" min="0">
         </div>
 
         <div class="food-card">
