@@ -54,6 +54,68 @@
             padding-bottom: 5px;
             margin-top: 20px;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* STYLES UNTUK TOOLTIP */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 18px;
+            height: 18px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 230px;
+            background-color: #0d1b2a;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 10px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border: 1px solid var(--primary-color);
+            font-size: 13px;
+            font-weight: normal;
+            line-height: 1.5;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--primary-color) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
 
         .input-group {
@@ -74,17 +136,17 @@
             color: var(--text-secondary);
         }
 
-        input {
+        input, select {
             padding: 10px;
             border-radius: 6px;
             border: 1px solid var(--accent-color);
             background-color: #0f3460;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
         }
 
-        input:focus {
+        input:focus, select:focus {
             border-color: var(--primary-color);
         }
 
@@ -137,6 +199,16 @@
             font-size: 14px;
             margin-bottom: 8px;
         }
+
+        .badge-level {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -146,21 +218,51 @@
     <p class="subtitle">Hitung estimasi hari untuk menaikkan level Tatari (Clash of Critters)</p>
 
     <!-- STATUS SAAT INI & TARGET -->
-    <div class="section-title">1. Status Level Tatari</div>
+    <div class="section-title">
+        1. Status Bar In-Game
+        <div class="tooltip-container">
+            <span class="info-icon">i</span>
+            <div class="tooltip-text">
+                <strong>Referensi Max Point Level:</strong><br>
+                • 100 = Level 1<br>
+                • 180 = Level 2<br>
+                • 260 = Level 3<br>
+                • 340 = Level 4<br>
+                • 440 = Level 5<br>
+                • 540 = Level 6<br>
+                • 640 = Level 7<br>
+                • 740 = Level 8<br>
+                • 840 = Level 9<br>
+            </div>
+        </div>
+    </div>
+    
     <div class="grid-inputs">
         <div class="input-group">
-            <label for="currentLevel">Level Sekarang:</label>
-            <input type="number" id="currentLevel" value="1" min="1" max="9">
+            <label for="currentPoints">Poin Saat Ini:</label>
+            <span class="desc">Angka depan (Contoh: <b>205</b>/440)</span>
+            <input type="number" id="currentPoints" value="205" min="0">
         </div>
         <div class="input-group">
-            <label for="currentPoints">Poin Saat Ini (Level skrg):</label>
-            <input type="number" id="currentPoints" value="0" min="0">
+            <label for="maxPoints">Max Poin Bar Saat Ini:</label>
+            <span class="desc">Angka penyebut (Contoh: 205/<b>440</b>)</span>
+            <input type="number" id="maxPoints" value="440" min="100" placeholder="misal: 440">
         </div>
     </div>
 
     <div class="input-group">
         <label for="targetLevel">Target Level:</label>
-        <input type="number" id="targetLevel" value="2" min="2" max="10">
+        <select id="targetLevel">
+            <option value="2">Level 2 (Max 180)</option>
+            <option value="3">Level 3 (Max 260)</option>
+            <option value="4">Level 4 (Max 340)</option>
+            <option value="5">Level 5 (Max 440)</option>
+            <option value="6" selected>Level 6 (Max 540)</option>
+            <option value="7">Level 7 (Max 640)</option>
+            <option value="8">Level 8 (Max 740)</option>
+            <option value="9">Level 9 (Max 840)</option>
+            <option value="10">Level 10 (Max Complete)</option>
+        </select>
     </div>
 
     <!-- INVENTORY MAKANAN -->
@@ -174,7 +276,7 @@
         <div class="input-group">
             <label>Common Elemental (+5 Points)</label>
             <span class="desc">Bolt Pudding, Frostnip Pop, Spicy Soda</span>
-            <input type="number" class="food-input" data-val="5" value="0" min="0">
+            <input type="number" class="food-input" data-val="5" value="119" min="0">
         </div>
         <div class="input-group">
             <label>Rare Elemental (+10 Points)</label>
@@ -198,6 +300,7 @@
     <!-- HASIL -->
     <div class="result-box" id="resultBox">
         <div class="result-title" id="resDays">Dibutuhkan: - Hari</div>
+        <div class="result-item" id="resDetectedLevel">Level Saat Ini Terdeteksi: -</div>
         <div class="result-item" id="resTotalNeeded">Total Poin Dibutuhkan: -</div>
         <div class="result-item" id="resInvPoints">Total Poin dari Makanan saat ini: -</div>
         <div class="result-item" id="resRemaining">Sisa Poin yang Masih Kurang: -</div>
@@ -206,7 +309,20 @@
 </div>
 
 <script>
-    // KEBUTUHAN POIN TIAP LEVEL (Berdasarkan Data)
+    // PEMETAAN MAX POIN KE LEVEL
+    const maxPointsToLevel = {
+        100: 1,
+        180: 2,
+        260: 3,
+        340: 4,
+        440: 5,
+        540: 6,
+        640: 7,
+        740: 8,
+        840: 9
+    };
+
+    // KEBUTUHAN POIN TIAP LEVEL
     const levelRequirements = {
         1: 100, // Level 1 -> 2
         2: 180, // Level 2 -> 3
@@ -222,12 +338,20 @@
     const DAILY_FEED_LIMIT = 15; // Jatah max makan per hari
 
     function calculateDays() {
-        const curLvl = parseInt(document.getElementById('currentLevel').value) || 1;
         const curPts = parseInt(document.getElementById('currentPoints').value) || 0;
+        const maxPts = parseInt(document.getElementById('maxPoints').value) || 100;
         const targetLvl = parseInt(document.getElementById('targetLevel').value) || 2;
 
+        // Deteksi Level Sekarang berdasarkan Max Points
+        let curLvl = maxPointsToLevel[maxPts];
+
+        if (!curLvl) {
+            alert('Max Poin tidak dikenali! Harap periksa kembali nilai Max Poin (contoh: 100, 180, 260, 340, 440, 540, 640, 740, 840).');
+            return;
+        }
+
         if (targetLvl <= curLvl) {
-            alert('Target level harus lebih tinggi dari level saat ini!');
+            alert(`Tatari kamu saat ini sudah Level ${curLvl}. Pilih Target Level yang lebih tinggi dari Level ${curLvl}!`);
             return;
         }
 
@@ -258,7 +382,6 @@
         let daysNeeded = 0;
 
         if (inventoryPoints >= totalPointsNeeded) {
-            // Stok cukup, simulasikan penggunaan makanan dari poin terbesar ke kecil
             let neededPts = totalPointsNeeded;
             let feeds = 0;
 
@@ -282,7 +405,6 @@
             totalFeedsNeeded = feeds;
             daysNeeded = Math.ceil(totalFeedsNeeded / DAILY_FEED_LIMIT);
         } else {
-            // Jika stok kurang, hitung feed stok + sisa poin harian (asumsi rata-rata feed harian +5 poin)
             let remainingPointsNeeded = totalPointsNeeded - inventoryPoints;
             totalFeedsNeeded = totalFoodCount;
 
@@ -295,6 +417,7 @@
         // Tampilkan Hasil
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resDays').innerText = `Dibutuhkan: ${daysNeeded} Hari`;
+        document.getElementById('resDetectedLevel').innerHTML = `Level Saat Ini Terdeteksi: <span class="badge-level">Level ${curLvl}</span>`;
         document.getElementById('resTotalNeeded').innerText = `Total Poin Dibutuhkan: ${totalPointsNeeded + curPts} Poin (Sisa: ${totalPointsNeeded} Poin lagi)`;
         document.getElementById('resInvPoints').innerText = `Total Poin dari Makanan Saat Ini: ${inventoryPoints} Poin`;
         
