@@ -6,12 +6,13 @@
     <title>Kalkulator Level Tatari - Clash of Critters</title>
     <style>
         :root {
-            --bg-color: #1a1a2e;
-            --card-bg: #16213e;
-            --accent-color: #0f3460;
-            --primary-color: #e94560;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #334155;
+            --primary-color: #ff4757;
+            --secondary-color: #ffa502;
             --text-color: #ffffff;
-            --text-secondary: #b2b2b2;
+            --text-secondary: #94a3b8;
         }
 
         body {
@@ -29,21 +30,37 @@
             max-width: 650px;
             background: var(--card-bg);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #334155;
+        }
+
+        .header-title {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header-title svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--secondary-color);
         }
 
         h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            font-size: 24px;
+            color: var(--secondary-color);
+            margin: 0;
+            font-size: 26px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         p.subtitle {
             text-align: center;
             color: var(--text-secondary);
             font-size: 14px;
+            margin-top: 5px;
             margin-bottom: 25px;
         }
 
@@ -51,18 +68,19 @@
             font-size: 16px;
             font-weight: bold;
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-top: 20px;
+            padding-bottom: 6px;
+            margin-top: 25px;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
+            color: #f1f5f9;
         }
 
-        /* STYLES UNTUK TOOLTIP */
+        /* PERBAIKAN STYLES TOOLTIP (MUNCUL KE BAWAH/SAMPING) */
         .tooltip-container {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
             cursor: pointer;
         }
 
@@ -70,47 +88,44 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background-color: var(--primary-color);
             color: #fff;
             border-radius: 50%;
             font-size: 12px;
             font-weight: bold;
-            font-style: italic;
         }
 
         .tooltip-text {
             visibility: hidden;
-            width: 230px;
-            background-color: #0d1b2a;
+            width: 240px;
+            background-color: #0f172a;
             color: #fff;
             text-align: left;
-            border-radius: 8px;
-            padding: 10px 12px;
+            border-radius: 10px;
+            padding: 12px;
             position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 50;
+            top: 130%; /* Diubah agar muncul ke bawah */
+            left: 0;   /* Posisi sejajar dari kiri ikon */
             opacity: 0;
             transition: opacity 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8);
             border: 1px solid var(--primary-color);
             font-size: 13px;
-            font-weight: normal;
             line-height: 1.5;
         }
 
+        /* Panah indikator menyangga ke atas */
         .tooltip-text::after {
             content: "";
             position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
+            bottom: 100%;
+            left: 10px;
+            border-width: 6px;
             border-style: solid;
-            border-color: var(--primary-color) transparent transparent transparent;
+            border-color: transparent transparent var(--primary-color) transparent;
         }
 
         .tooltip-container:hover .tooltip-text {
@@ -128,7 +143,7 @@
         label {
             font-size: 14px;
             color: var(--text-color);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         span.desc {
@@ -137,17 +152,19 @@
         }
 
         input, select {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--accent-color);
-            background-color: #0f3460;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
             color: #fff;
             font-size: 15px;
             outline: none;
+            transition: 0.2s;
         }
 
         input:focus, select:focus {
-            border-color: var(--primary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(255, 165, 2, 0.4);
         }
 
         .grid-inputs {
@@ -162,50 +179,104 @@
             gap: 15px;
         }
 
+        .food-card {
+            background-color: #0f172a;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .food-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--secondary-color);
+        }
+
+        .food-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .food-icon {
+            font-size: 24px;
+            background: #1e293b;
+            padding: 6px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .food-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .food-title label {
+            font-size: 13px;
+        }
+
         .btn-calc {
             width: 100%;
-            padding: 12px;
-            background-color: var(--primary-color);
+            padding: 14px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
             transition: 0.2s;
         }
 
         .btn-calc:hover {
-            opacity: 0.9;
+            transform: scale(1.01);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
         }
 
         .result-box {
             margin-top: 25px;
-            padding: 15px;
-            background: var(--accent-color);
-            border-radius: 8px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid #22c55e;
+            border-radius: 12px;
             display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            color: #4eef91;
-            margin-bottom: 10px;
+            color: #22c55e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .result-item {
             font-size: 14px;
             margin-bottom: 8px;
+            color: #e2e8f0;
         }
 
         .badge-level {
             display: inline-block;
             background-color: var(--primary-color);
             color: #fff;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 3px 10px;
+            border-radius: 6px;
             font-weight: bold;
             font-size: 13px;
         }
@@ -214,12 +285,15 @@
 <body>
 
 <div class="container">
-    <h1>Kalkulator Tatari</h1>
-    <p class="subtitle">Hitung estimasi hari untuk menaikkan level Tatari (Clash of Critters)</p>
+    <div class="header-title">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <h1>Kalkulator Tatari</h1>
+    </div>
+    <p class="subtitle">Clash of Critters • Estimasi Hari Naik Level Tatari</p>
 
     <!-- STATUS SAAT INI & TARGET -->
     <div class="section-title">
-        1. Status Bar In-Game
+        🐾 1. Status Bar In-Game
         <div class="tooltip-container">
             <span class="info-icon">i</span>
             <div class="tooltip-text">
@@ -251,55 +325,86 @@
     </div>
 
     <div class="input-group">
-        <label for="targetLevel">Target Level:</label>
+        <label for="targetLevel">Target Menyelesaikan Level:</label>
         <select id="targetLevel">
-            <option value="2">Level 2 (Max 180)</option>
-            <option value="3">Level 3 (Max 260)</option>
-            <option value="4">Level 4 (Max 340)</option>
-            <option value="5">Level 5 (Max 440)</option>
-            <option value="6" selected>Level 6 (Max 540)</option>
-            <option value="7">Level 7 (Max 640)</option>
-            <option value="8">Level 8 (Max 740)</option>
-            <option value="9">Level 9 (Max 840)</option>
-            <option value="10">Level 10 (Max Complete)</option>
+            <option value="1">Lulus Level 1 (Selesai Max 100)</option>
+            <option value="2">Lulus Level 2 (Selesai Max 180)</option>
+            <option value="3">Lulus Level 3 (Selesai Max 260)</option>
+            <option value="4">Lulus Level 4 (Selesai Max 340)</option>
+            <option value="5">Lulus Level 5 (Selesai Max 440)</option>
+            <option value="6" selected>Lulus Level 6 (Selesai Max 540)</option>
+            <option value="7">Lulus Level 7 (Selesai Max 640)</option>
+            <option value="8">Lulus Level 8 (Selesai Max 740)</option>
+            <option value="9">Lulus Level 9 (Selesai Max 840)</option>
         </select>
     </div>
 
     <!-- INVENTORY MAKANAN -->
-    <div class="section-title">2. Stok Makanan yang Dimiliki</div>
+    <div class="section-title">🍖 2. Stok Makanan yang Dimiliki</div>
     <div class="food-grid">
-        <div class="input-group">
-            <label>Cookie (+1 Point)</label>
-            <span class="desc">Generic treats</span>
+        
+        <div class="food-card">
+            <div class="food-header">
+                <span class="food-icon">🍪</span>
+                <div class="food-title">
+                    <label>Cookie (+1 Point)</label>
+                    <span class="desc">Generic treats</span>
+                </div>
+            </div>
             <input type="number" class="food-input" data-val="1" value="0" min="0">
         </div>
-        <div class="input-group">
-            <label>Common Elemental (+5 Points)</label>
-            <span class="desc">Bolt Pudding, Frostnip Pop, Spicy Soda</span>
+
+        <div class="food-card">
+            <div class="food-header">
+                <span class="food-icon">🍮</span>
+                <div class="food-title">
+                    <label>Common Elemental (+5)</label>
+                    <span class="desc">Pudding, Pop, Soda</span>
+                </div>
+            </div>
             <input type="number" class="food-input" data-val="5" value="119" min="0">
         </div>
-        <div class="input-group">
-            <label>Rare Elemental (+10 Points)</label>
-            <span class="desc">Fluff Candy, Shaved Ice, Lava Ramen</span>
+
+        <div class="food-card">
+            <div class="food-header">
+                <span class="food-icon">🍧</span>
+                <div class="food-title">
+                    <label>Rare Elemental (+10)</label>
+                    <span class="desc">Candy, Ice, Ramen</span>
+                </div>
+            </div>
             <input type="number" class="food-input" data-val="10" value="0" min="0">
         </div>
-        <div class="input-group">
-            <label>Glitter Fruit (+15 Points)</label>
-            <span class="desc">Rare fruit (0.4% shiny chance)</span>
+
+        <div class="food-card">
+            <div class="food-header">
+                <span class="food-icon">✨</span>
+                <div class="food-title">
+                    <label>Glitter Fruit (+15)</label>
+                    <span class="desc">Rare Shiny Fruit</span>
+                </div>
+            </div>
             <input type="number" class="food-input" data-val="15" value="0" min="0">
         </div>
-        <div class="input-group">
-            <label>Premium Elemental (+30 Points)</label>
-            <span class="desc">Tempura Plate, Sushi Skiff, Volcano Pizza</span>
+
+        <div class="food-card">
+            <div class="food-header">
+                <span class="food-icon">🍱</span>
+                <div class="food-title">
+                    <label>Premium Elemental (+30)</label>
+                    <span class="desc">Tempura, Sushi, Pizza</span>
+                </div>
+            </div>
             <input type="number" class="food-input" data-val="30" value="0" min="0">
         </div>
+
     </div>
 
-    <button class="btn-calc" onclick="calculateDays()">Hitung Estimasi Hari</button>
+    <button class="btn-calc" onclick="calculateDays()">⚡ Hitung Estimasi Hari ⚡</button>
 
     <!-- HASIL -->
     <div class="result-box" id="resultBox">
-        <div class="result-title" id="resDays">Dibutuhkan: - Hari</div>
+        <div class="result-title" id="resDays">📊 Dibutuhkan: - Hari</div>
         <div class="result-item" id="resDetectedLevel">Level Saat Ini Terdeteksi: -</div>
         <div class="result-item" id="resTotalNeeded">Total Poin Dibutuhkan: -</div>
         <div class="result-item" id="resInvPoints">Total Poin dari Makanan saat ini: -</div>
@@ -309,63 +414,41 @@
 </div>
 
 <script>
-    // PEMETAAN MAX POIN KE LEVEL
     const maxPointsToLevel = {
-        100: 1,
-        180: 2,
-        260: 3,
-        340: 4,
-        440: 5,
-        540: 6,
-        640: 7,
-        740: 8,
-        840: 9
+        100: 1, 180: 2, 260: 3, 340: 4, 440: 5, 540: 6, 640: 7, 740: 8, 840: 9
     };
 
-    // KEBUTUHAN POIN TIAP LEVEL
     const levelRequirements = {
-        1: 100, // Level 1 -> 2
-        2: 180, // Level 2 -> 3
-        3: 260, // Level 3 -> 4
-        4: 340, // Level 4 -> 5
-        5: 440, // Level 5 -> 6
-        6: 540, // Level 6 -> 7
-        7: 640, // Level 7 -> 8
-        8: 740, // Level 8 -> 9
-        9: 840  // Level 9 -> 10
+        1: 100, 2: 180, 3: 260, 4: 340, 5: 440, 6: 540, 7: 640, 8: 740, 9: 840
     };
 
-    const DAILY_FEED_LIMIT = 15; // Jatah max makan per hari
+    const DAILY_FEED_LIMIT = 15;
 
     function calculateDays() {
         const curPts = parseInt(document.getElementById('currentPoints').value) || 0;
         const maxPts = parseInt(document.getElementById('maxPoints').value) || 100;
-        const targetLvl = parseInt(document.getElementById('targetLevel').value) || 2;
+        const targetLvl = parseInt(document.getElementById('targetLevel').value) || 1;
 
-        // Deteksi Level Sekarang berdasarkan Max Points
         let curLvl = maxPointsToLevel[maxPts];
 
         if (!curLvl) {
-            alert('Max Poin tidak dikenali! Harap periksa kembali nilai Max Poin (contoh: 100, 180, 260, 340, 440, 540, 640, 740, 840).');
+            alert('Max Poin tidak dikenali! Harap periksa nilai Max Poin (contoh: 100, 180, 260, 340, 440, 540, 640, 740, 840).');
             return;
         }
 
-        if (targetLvl <= curLvl) {
-            alert(`Tatari kamu saat ini sudah Level ${curLvl}. Pilih Target Level yang lebih tinggi dari Level ${curLvl}!`);
+        if (targetLvl < curLvl) {
+            alert(`Tatari kamu saat ini sudah di Level ${curLvl}. Pilih Target Level yang minimal sama atau lebih tinggi!`);
             return;
         }
 
-        // 1. Hitung total poin yang dibutuhkan dari curLvl ke targetLvl
         let totalPointsNeeded = 0;
-        for (let lvl = curLvl; lvl < targetLvl; lvl++) {
+        for (let lvl = curLvl; lvl <= targetLvl; lvl++) {
             totalPointsNeeded += (levelRequirements[lvl] || 840);
         }
 
-        // Kurangi dengan poin yang sudah dikumpulkan di level saat ini
         totalPointsNeeded -= curPts;
         if (totalPointsNeeded < 0) totalPointsNeeded = 0;
 
-        // 2. Hitung total poin dari stok makanan saat ini
         let inventoryPoints = 0;
         let totalFoodCount = 0;
         const foodInputs = document.querySelectorAll('.food-input');
@@ -377,7 +460,6 @@
             totalFoodCount += count;
         });
 
-        // 3. Logika Perhitungan Hari & Feed
         let totalFeedsNeeded = 0;
         let daysNeeded = 0;
 
@@ -414,9 +496,8 @@
             daysNeeded = Math.ceil(grandTotalFeeds / DAILY_FEED_LIMIT);
         }
 
-        // Tampilkan Hasil
         document.getElementById('resultBox').style.display = 'block';
-        document.getElementById('resDays').innerText = `Dibutuhkan: ${daysNeeded} Hari`;
+        document.getElementById('resDays').innerText = `📊 Dibutuhkan: ${daysNeeded} Hari`;
         document.getElementById('resDetectedLevel').innerHTML = `Level Saat Ini Terdeteksi: <span class="badge-level">Level ${curLvl}</span>`;
         document.getElementById('resTotalNeeded').innerText = `Total Poin Dibutuhkan: ${totalPointsNeeded + curPts} Poin (Sisa: ${totalPointsNeeded} Poin lagi)`;
         document.getElementById('resInvPoints').innerText = `Total Poin dari Makanan Saat Ini: ${inventoryPoints} Poin`;
