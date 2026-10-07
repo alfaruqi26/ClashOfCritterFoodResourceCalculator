@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Level Tatari - Clash of Critters</title>
     
-    <!-- FAVICON (Ikon Tab Browser) -->
+    <!-- PWA MANIFEST & THEME -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kalkulator Tatari">
+
+    <!-- FAVICON & TOUCH ICON -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
 
     <style>
         :root {
@@ -81,7 +89,7 @@
             color: #f1f5f9;
         }
 
-        /* STYLES TOOLTIP (MUNCUL KE BAWAH) */
+        /* STYLES TOOLTIP (MUNCUL KE BAWAH/TIDAK TERPOTONG) */
         .tooltip-container {
             position: relative;
             display: inline-flex;
@@ -508,6 +516,15 @@
         let remainingStr = inventoryPoints >= totalPointsNeeded ? "Sudah Cukup!" : `${totalPointsNeeded - inventoryPoints} Poin lagi`;
         document.getElementById('resRemaining').innerText = `Sisa Poin yang Masih Kurang: ${remainingStr}`;
         document.getElementById('resTotalFeeds').innerText = `Estimasi Total Beri Makan: ${totalFeedsNeeded} kali`;
+    }
+
+    // REGISTRASI SERVICE WORKER UNTUK PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker terdaftar:', reg))
+                .catch(err => console.log('Service Worker gagal terdaftar:', err));
+        });
     }
 </script>
 
